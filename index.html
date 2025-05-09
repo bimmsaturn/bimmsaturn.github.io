@@ -1,0 +1,568 @@
+<h1>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bimm Market</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://files.catbox.moe/hjw2k0.jpg" type="image/x-icon" />
+  <link rel="shortcut icon" href="https://files.catbox.moe/hjw2k0.jpg" type="image/x-icon" />
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Bimm Market - Payment Page" />
+  <meta property="og:description" content="Halaman pembayaran resmi Bimm Market - gunakan QRIS atau transfer bank." />
+  <meta property="og:image" content="https://files.catbox.moe/hjw2k0.jpg" />
+  <meta property="og:url" content="https://bimm-market.vercel.app/" />
+  <meta property="og:type" content="website" />
+
+  <style>
+    /* Theme Variables */
+    :root {
+      --bg-color: #0f0f0f;
+      --container-bg: rgba(0, 0, 0, 0.7);
+      --text-color: white;
+      --accent-color: #4dabff;
+      --button-bg: #4dabff;
+      --button-hover: #3399ff;
+      --shadow: rgba(77, 171, 255, 0.4);
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f0f0f0;
+      --container-bg: rgba(255, 255, 255, 0.9);
+      --text-color: #000;
+      --accent-color: #007bff;
+      --button-bg: #007bff;
+      --button-hover: #0056b3;
+      --shadow: rgba(0, 123, 255, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      background-image: url('https://files.catbox.moe/hvpqy7.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      padding: 60px 15px 40px 15px;
+      transition: background-color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    .loader-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-color);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeOut 1.5s ease forwards;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    .loader {
+      width: 60px;
+      aspect-ratio: 1;
+      border: 6px solid #fff0;
+      border-radius: 50%;
+      border-right: 6px solid var(--accent-color);
+      animation: spin 1s infinite linear;
+    }
+
+    @keyframes spin {
+      100% { transform: rotate(1turn); }
+    }
+
+    .container {
+      background: var(--container-bg);
+      border-radius: 20px;
+      padding: 30px 25px 40px 25px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 0 20px var(--shadow);
+      animation: fadeInUp 1s ease;
+      box-sizing: border-box;
+      backdrop-filter: blur(8px);
+      transition: all 0.4s ease;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .profile-pic {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--accent-color);
+      box-shadow: 0 0 15px var(--accent-color);
+      transition: transform 0.3s ease;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin: 10px 0 20px 0;
+      color: var(--accent-color);
+      text-shadow: 0 0 8px var(--accent-color);
+    }
+
+    .contact-box {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 300px;
+      margin: 20px auto;
+      text-align: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .contact-box p {
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .whatsapp-button {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #25D366;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .whatsapp-button:hover {
+      background-color: #1ebf59;
+    }
+
+    .theme-toggle-icon,
+    .social-toggle-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: none;
+      border: 2px solid var(--accent-color);
+      color: var(--accent-color);
+      padding: 8px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin: 5px;
+    }
+
+    .theme-toggle-icon:hover,
+    .social-toggle-icon:hover {
+      background: var(--accent-color);
+      color: #fff;
+    }
+
+    .toggle-buttons {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .payment-option {
+      margin: 18px 0;
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .copy-btn {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .copy-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: -100%;
+      width: 300%;
+      height: 300%;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translateY(-50%);
+      transition: left 0.5s ease;
+    }
+
+    .copy-btn.pressed::after {
+      left: 100%;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: var(--button-bg);
+      border: none;
+      border-radius: 6px;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    button:hover {
+      background-color: var(--button-hover);
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .notice {
+      font-size: 14px;
+      margin-top: 18px;
+      padding: 10px;
+      border-radius: 10px;
+      background-color: rgba(255,255,255,0.15);
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .watermark {
+      margin-top: 30px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      user-select: none;
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Modal QRIS */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 9998;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.9);
+    }
+
+    .modal-content {
+      background-color: transparent;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 320px;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .modal-img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #4dabff;
+    }
+
+    .close {
+      color: #fff;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: #4dabff;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      line-height: 26px;
+      text-align: center;
+      transition: 0.3s ease;
+    }
+
+    .close:hover {
+      color: #bbb;
+    }
+
+    .social-dropdown {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      background: var(--container-bg);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      width: 280px;
+      margin: 10px auto;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .social-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+
+    .social-dropdown a:hover {
+      color: var(--accent-color);
+    }
+
+    .social-dropdown img {
+      width: 20px;
+    }
+  </style>
+</head>
+<body data-theme="dark">
+
+  <!-- Loader -->
+  <div class="loader-wrapper">
+    <div class="loader"></div>
+  </div>
+
+  <div class="container">
+
+    <!-- Profile Picture -->
+    <div class="profile-header">
+      <img src="https://files.catbox.moe/hjw2k0.jpg" alt="Profile Picture" class="profile-pic" />
+    </div>
+
+    <h1>Payment Bimm</h1>
+
+    <!-- Informasi Kontak -->
+    <div class="contact-box">
+      <p><strong>Contact Owner:</strong> Bimm Market</p>
+      <a href="https://wa.me/c/6289678656567" target="_blank" rel="noopener noreferrer" class="whatsapp-button">💬 Chat via WhatsApp</a>
+    </div>
+
+    <!-- Tombol Tema & Sosmed -->
+    <div class="toggle-buttons">
+      <button class="social-toggle-icon" onclick="toggleSocial()">💬 Sosial Media</button>
+      <button class="theme-toggle-icon" onclick="toggleTheme()">🌙 Dark Mode</button>
+    </div>
+
+    <!-- Dropdown Sosial Media -->
+    <div id="socialDropdown" class="social-dropdown">
+      <a href="https://wa.me/c/6289678656567" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="20" alt="WhatsApp" /> WhatsApp
+      </a>
+      <a href="https://www.instagram.com/kzhyaaa" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" width="20" alt="Instagram" /> Instagram
+      </a>
+      <a href="https://tiktok.com/@georiwaaa" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/TikTok_logo.svg" width="20" alt="TikTok" /> TikTok
+      </a>
+      <a href="https://t.me/toraaazy" target="_blank" rel="noopener noreferrer">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" width="20" alt="Telegram" /> Telegram
+      </a>
+    </div>
+
+    <!-- Payment Options -->
+    <div class="payment-option" aria-label="DANA payment info">
+      <h3>DANA</h3>
+      <div style="display:flex;justify-content:center;align-items:center;margin-bottom:10px;">
+        <img src="https://seekvectorlogo.net/wp-content/uploads/2021/09/dana-logo-vector.svg" alt="Logo DANA" style="width:32px;height:32px;" />
+        <div style="margin-left:10px;text-align:left;">
+          <p style="margin:0;">089678656567</p>
+          <em style="font-size:14px;">(Ye** Wa*****)</em>
+        </div>
+      </div>
+      <button class="copy-btn" onclick="copyToClipboard(this, '089678656567')">Salin Nomor</button>
+    </div>
+
+    <div class="payment-option" aria-label="GoPay payment info">
+      <h3>GoPay</h3>
+      <div style="display:flex;justify-content:center;align-items:center;margin-bottom:10px;">
+        <img src="https://seeklogo.com/images/G/gopay-logo-BF8E9A8750-seeklogo.com.png" alt="Logo GoPay" style="width:32px;height:32px;" />
+        <div style="margin-left:10px;text-align:left;">
+          <p style="margin:0;">089678656567</p>
+          <em style="font-size:14px;">(Salsa**)</em>
+        </div>
+      </div>
+      <button class="copy-btn" onclick="copyToClipboard(this, '089678656567')">Salin Nomor</button>
+    </div>
+
+    <div class="payment-option" aria-label="OVO payment info">
+      <h3>OVO</h3>
+      <div style="display:flex;justify-content:center;align-items:center;margin-bottom:10px;">
+        <img src="https://seeklogo.com/images/O/ovo-indonesia-logo-6E95B6C6F8-seeklogo.com.png" alt="Logo OVO" style="width:32px;height:32px;" />
+        <div style="margin-left:10px;text-align:left;">
+          <p style="margin:0;">089678656567</p>
+          <em style="font-size:14px;">(Salsa**)</em>
+        </div>
+      </div>
+      <button class="copy-btn" onclick="copyToClipboard(this, '089678656567')">Salin Nomor</button>
+    </div>
+
+    <div class="payment-option" aria-label="ShopeePay payment info">
+      <h3>ShopeePay</h3>
+      <div style="display:flex;justify-content:center;align-items:center;margin-bottom:10px;">
+        <img src="https://seeklogo.com/images/S/shopeepay-logo-3A4D8C8DC5-seeklogo.com.png" alt="Logo ShopeePay" style="width:32px;height:32px;" />
+        <div style="margin-left:10px;text-align:left;">
+          <p style="margin:0;">089678656567</p>
+        </div>
+      </div>
+      <button class="copy-btn" onclick="copyToClipboard(this, '089678656567')">Salin Nomor</button>
+    </div>
+
+    <!-- QRIS Section -->
+    <div class="payment-option" aria-label="QRIS Pembayaran">
+      <h3>QRIS Pembayaran</h3>
+      <a href="#" onclick="openQrisModal(); return false;">
+        <img src="https://files.catbox.moe/9z7kry.jpg" alt="QRIS Bimm Market" style="width: 60%; max-width: 200px;" />
+      </a>
+      <p style="margin-top: 15px; font-size: 14px; line-height: 1.4;">
+        🖼️ <strong>Pencet logo QRIS ini</strong> → Tinggal SS → Bayar aja bang 😋👍🏻
+      </p>
+    </div>
+
+    <!-- Notice -->
+    <div class="notice" aria-live="polite">
+      Harap isi nominal dengan benar dan kirim bukti transaksi setelah pembayaran.
+    </div>
+
+    <!-- Watermark -->
+    <div class="watermark" aria-hidden="true">
+      Payment Bimm Market - 2025
+    </div>
+
+  </div>
+
+  <!-- Modal QRIS -->
+  <div id="qrisModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeQrisModal()">&times;</span>
+      <img src="https://files.catbox.moe/9z7kry.jpg" alt="QRIS Bimm Market" class="modal-img" />
+      <p style="margin-top:10px;font-size:14px;">Scan untuk membayar via QRIS</p>
+    </div>
+  </div>
+
+  <style>
+    .social-dropdown {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      background: var(--container-bg);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      width: 280px;
+      margin: 10px auto;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .social-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: 0.3s ease;
+    }
+
+    .social-dropdown a:hover {
+      color: var(--accent-color);
+    }
+
+    .social-dropdown img {
+      width: 20px;
+    }
+  </style>
+
+  <script>
+    function copyToClipboard(btn, text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Nomor berhasil di salin bang 😼👍🏻');
+
+        btn.classList.add('pressed');
+        setTimeout(() => btn.classList.remove('pressed'), 500);
+      }).catch(() => {
+        alert('Gagal menyalin nomor.');
+      });
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const icon = document.querySelector('.theme-toggle-icon');
+
+      if (body.getAttribute('data-theme') === 'dark') {
+        body.setAttribute('data-theme', 'light');
+        icon.textContent = '☀️ Light Mode';
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        icon.textContent = '🌙 Dark Mode';
+      }
+
+      localStorage.setItem('user-theme', body.getAttribute('data-theme'));
+    }
+
+    function toggleSocial() {
+      const dropdown = document.getElementById('socialDropdown');
+      dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function openQrisModal() {
+      document.getElementById('qrisModal').style.display = 'block';
+    }
+
+    function closeQrisModal() {
+      document.getElementById('qrisModal').style.display = 'none';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('user-theme') || 'dark';
+      document.body.setAttribute('data-theme', savedTheme);
+
+      const icon = document.querySelector('.theme-toggle-icon');
+      icon.textContent = savedTheme === 'dark' ? '🌙 Dark Mode' : '☀️ Light Mode';
+
+      setTimeout(() => {
+        document.querySelector('.loader-wrapper').style.display = 'none';
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
+</h1>
